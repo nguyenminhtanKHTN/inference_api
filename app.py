@@ -3,6 +3,10 @@ from pydantic import BaseModel, Field
 
 from inference_pipeline import Preprocessor, Model, Postprocessor, InferenceService
 
+import joblib
+
+model = joblib.load("imdb_tfidf_lr.joblib")
+
 app = FastAPI(title="NLP Deploy Skeleton")
 
 svc = InferenceService(Preprocessor(), Model(), Postprocessor())
@@ -20,4 +24,7 @@ def version():
 
 @app.post("/predict")
 def predict(req: PredictRequest):
-    return svc.predict(req.text)
+    prob = model.predict_proba([req.text])[0]
+    label = 'positive' if prob[1] > 0.5 else 'negative'
+    score = float(prob[1])  # probability of positive class
+    return {"label": label, "score": score}
