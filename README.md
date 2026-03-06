@@ -18,3 +18,6 @@ docker run --rm -p 8000:8000 ai-api:0.1.0
 * GET /health
 * GET /version
 * POST /predict
+
+## Link demo
+https://inference-api-wyc3.onrender.com/
